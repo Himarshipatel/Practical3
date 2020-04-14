@@ -1,24 +1,57 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {useForm, Controller} from 'react-hook-form';
+import {Form,FormGroup,Label,Input,Button} from 'reactstrap';
+import * as Yup from 'yup';
+//import "bootstrap/scss/bootstrap.scss";
+import "./index.css" ;
 
 function App() {
+
+
+const schema = Yup.object().shape({
+  email:Yup.string()
+  .email()
+  .required(),
+  password:Yup.string()
+  .min(8)
+  .required()
+});
+
+const {control,handleSubmit,errors} = useForm(
+  {validationSchema:schema});
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Form onSubmit={handleSubmit(values=>console.log(values))}>
+        <FormGroup>
+          <Label>Email</Label>
+          <Controller
+          as={Input}
+          control={control}
+          name="email"
+          defaultValue=""
+          />
+          {errors.email && (
+            <small className="text-danger">{errors.email.message}</small>
+          )}
+          </FormGroup>
+          <FormGroup>
+          <Label>Password</Label>
+          <Controller
+          as={Input}
+          control={control}
+          name="password"
+          type="password"
+          defaultValue=""
+          />
+         {errors.password &&(
+           <small className="text-danger">{errors.password.message}</small>
+         )}
+        </FormGroup>
+        <Button type="submit" color="primary">Login</Button>
+      </Form>
+    
+
     </div>
   );
 }
